@@ -1,0 +1,28 @@
+# Global directories
+.deps/
+autom4te.cache/
+
+# Global files
+.dirstamp
+.DS_Store
+.vscode
+aclocal.m4
+Makefile
+Makefile.in
+
+# Root files
+/compile
+/config.guess
+/config.h
+/config.h.in
+/config.log
+/config.status
+/config.sub
+/configure
+/depcomp
+/install-sh
+/missing
+/src/dosbox
+/src/**/*.a
+/src/**/*.o
+/stamp-h1
