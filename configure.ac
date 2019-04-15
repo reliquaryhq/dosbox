@@ -8,7 +8,7 @@ AC_CANONICAL_HOST
 AC_CANONICAL_BUILD
 
 dnl Setup for automake
-AM_INIT_AUTOMAKE
+AM_INIT_AUTOMAKE([subdir-objects])
 AC_CONFIG_HEADER(config.h)
 
 dnl Checks for programs.
@@ -695,6 +695,8 @@ src/libs/Makefile
 src/libs/zmbv/Makefile
 src/libs/gui_tk/Makefile
 src/misc/Makefile
+src/munt/Makefile
+src/munt/mt32emu/Makefile
 src/shell/Makefile
 src/platform/Makefile
 src/platform/visualc/Makefile
