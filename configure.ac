@@ -3,6 +3,14 @@ AC_INIT(dosbox,SVN)
 AC_PREREQ(2.50)
 AC_CONFIG_SRCDIR(README)
 
+dnl Check for Emscripten
+AS_CASE([$CC],
+    [*emcc], [emscripten="yes"],
+    [emscripten="no"])
+
+AS_IF([test "x$emscripten" = "xyes"],
+AC_MSG_NOTICE([targeting emscripten]))
+
 dnl Detect the canonical host and target build environment
 AC_CANONICAL_HOST
 AC_CANONICAL_BUILD
