@@ -94,19 +94,36 @@ AC_DEFUN([EXULT_CHECK_SDL],[
 
   if test x$exult_sdlok = xyes ; then
 
-    if test ! \( \( $sdl_major_version -gt $REQ_MAJOR \) -o \( \( $sdl_major_version -eq $REQ_MAJOR \) -a \( \( $sdl_minor_version -gt $REQ_MINOR \) -o \( \( $sdl_minor_version -eq $REQ_MINOR \) -a \( $sdl_patchlevel -gt $REQ_PATCHLEVEL \) \) \) \) \); then
+    if test ! \( \( $sdl_major_version -gt $REQ_MAJOR \) -o \( \( $sdl_major_version -eq $REQ_MAJOR \) -a \( \( $sdl_minor_version -gt $REQ_MINOR \) -o \( \( $sdl_minor_version -eq $REQ_MINOR \) -a \( \( $sdl_patchlevel -gt $REQ_PATCHLEVEL \) -o \( \( $sdl_patchlevel -eq $REQ_PATCHLEVEL \) \) \) \) \) \) \); then
       exult_sdlok="no, version < $REQ_VERSION found"
     else
-      AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
-      #include "SDL.h"
+      if test x$emscripten = xyes; then
+        dnl Use a more relaxed check for SDL version match. Emscripten's
+        dnl sdl2-config currently reports 2.0.0, even though the SDL2 port is
+        dnl actually > 2.0.0
 
-      int main(int argc, char *argv[])
-      {
-        static int test_array[1-2*!(SDL_MAJOR_VERSION==$sdl_major_version&&SDL_MINOR_VERSION==$sdl_minor_version&&SDL_PATCHLEVEL==$sdl_patchlevel)];
-        test_array[0] = 0;
-        return 0;
-      }
-      ]])],,[[exult_sdlok="no, version of SDL.h doesn't match that of sdl-config"]])
+        AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+        #include "SDL.h"
+
+        int main(int argc, char *argv[])
+        {
+          static int test_array[1-2*!(SDL_MAJOR_VERSION==$sdl_major_version&&SDL_MINOR_VERSION==$sdl_minor_version)];
+          test_array[0] = 0;
+          return 0;
+        }
+        ]])],,[[exult_sdlok="no, version of SDL.h doesn't match that of sdl-config"]])
+      else
+        AC_COMPILE_IFELSE([AC_LANG_SOURCE([[
+        #include "SDL.h"
+
+        int main(int argc, char *argv[])
+        {
+          static int test_array[1-2*!(SDL_MAJOR_VERSION==$sdl_major_version&&SDL_MINOR_VERSION==$sdl_minor_version&&SDL_PATCHLEVEL==$sdl_patchlevel)];
+          test_array[0] = 0;
+          return 0;
+        }
+        ]])],,[[exult_sdlok="no, version of SDL.h doesn't match that of sdl-config"]])
+      fi
     fi
   fi
 
