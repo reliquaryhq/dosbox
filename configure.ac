@@ -11,6 +11,10 @@ AS_CASE([$CC],
 AS_IF([test "x$emscripten" = "xyes"],
 AC_MSG_NOTICE([targeting emscripten]))
 
+dnl Prevent incorrect detection of emscripten by AC_CANONICAL_HOST
+AS_IF([test "x$emscripten" = "xyes"],
+    [host_alias=none])
+
 dnl Detect the canonical host and target build environment
 AC_CANONICAL_HOST
 AC_CANONICAL_BUILD
