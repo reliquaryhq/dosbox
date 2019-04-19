@@ -1,0 +1,15 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: reliquaryhq/ubuntu:v0.1.0
+    steps:
+      - checkout
+      - run:
+          name: Build
+          command: |
+            source ~/emsdk-portable/emsdk_env.sh
+            bash autogen.sh
+            emconfigure ./configure --with-sdl=sdl2
+            emmake make
