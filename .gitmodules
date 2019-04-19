@@ -1,0 +1,3 @@
+[submodule "reliquary/emscripten-sdl2"]
+	path = reliquary/emscripten-sdl2
+	url = https://github.com/reliquaryhq/emscripten-sdl2.git
