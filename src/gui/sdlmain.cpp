@@ -56,6 +56,17 @@
 #include "cross.h"
 #include "control.h"
 
+#if defined(__EMSCRIPTEN__)
+#include <emscripten.h>
+#include <emscripten/html5.h>
+#include <pthread.h>
+
+struct main_arg {
+	int argc;
+	char** argv;
+};
+#endif
+
 #if SDL_VERSION_ATLEAST(2,0,0)
 #define MAPPERFILE "mapper-sdl2-" VERSION ".map"
 #else
@@ -2099,7 +2110,11 @@ static void GUI_StartUp(Section * sec) {
 //#endif
 
 /* Please leave the Splash screen stuff in working order in DOSBox. We spend a lot of time making DOSBox. */
+#if defined(__EMSCRIPTEN__)
+	SDL_Surface* splash_surf = nullptr;
+#else
 	SDL_Surface* splash_surf = SDL_CreateRGBSurface(SDL_SWSURFACE, 640, 400, 32, rmask, gmask, bmask, 0);
+#endif
 	if (splash_surf) {
 #if SDL_VERSION_ATLEAST(2,0,0)
 		SDL_SetSurfaceBlendMode(splash_surf, SDL_BLENDMODE_BLEND);
@@ -3005,7 +3020,11 @@ static void erasemapperfile() {
 
 
 //extern void UI_Init(void);
+#if defined(__EMSCRIPTEN__)
+int dosbox_main(int argc, char* argv[]) {
+#else
 int main(int argc, char* argv[]) {
+#endif
 	try {
 		CommandLine com_line(argc,argv);
 		Config myconf(&com_line);
@@ -3259,6 +3278,38 @@ int main(int argc, char* argv[]) {
 #endif
 	return 0;
 }
+
+#if defined(__EMSCRIPTEN__)
+void emscripten_loop() {
+}
+
+void* dosbox_thread_proc(void* user_arg) {
+	EmscriptenWebGLContextAttributes attr;
+	emscripten_webgl_init_context_attributes(&attr);
+	attr.alpha = EM_FALSE;
+	attr.antialias = EM_FALSE;
+
+	EMSCRIPTEN_WEBGL_CONTEXT_HANDLE ctx = emscripten_webgl_create_context(0, &attr);
+	emscripten_webgl_make_context_current(ctx);
+	LOG_MSG("Created GL context with handle %u", (unsigned int)ctx);
+
+	main_arg* dosbox_arg = (main_arg*)user_arg;
+	dosbox_main(dosbox_arg->argc, dosbox_arg->argv);
+
+	return nullptr;
+}
+
+int main(int argc, char* argv[]) {
+	main_arg dosbox_arg = { argc, argv };
+
+	pthread_t dosbox_thread;
+	pthread_create(&dosbox_thread, nullptr, dosbox_thread_proc, &dosbox_arg);
+
+	emscripten_set_main_loop(&emscripten_loop, 0, 1);
+
+	return 0;
+}
+#endif
 
 void GFX_GetSize(int &width, int &height, bool &fullscreen) {
 	width = sdl.draw.width;
