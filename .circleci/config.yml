@@ -16,7 +16,7 @@ jobs:
           command: |
             source ~/emsdk-portable/emsdk_env.sh
             bash autogen.sh
-            emconfigure ./configure --with-sdl=sdl2
+            emconfigure ./configure --with-sdl=sdl2 CXXFLAGS="-g -O2"
             emmake make
       - run:
           name: Link
