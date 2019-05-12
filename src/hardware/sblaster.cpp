@@ -52,7 +52,7 @@ bool MIDI_Available(void);
 
 #define DSP_NO_COMMAND 0
 
-#define DMA_BUFSIZE 1024
+#define DMA_BUFSIZE 4096
 #define DSP_BUFSIZE 64
 #define DSP_DACSIZE 512
 
