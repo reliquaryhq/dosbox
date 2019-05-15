@@ -23,4 +23,4 @@ jobs:
           command: |
             source ~/emsdk-portable/emsdk_env.sh
             mv src/dosbox dosbox.bc
-            EMCC_LOCAL_PORTS="sdl2=$(pwd)/reliquary/emscripten-sdl2" emcc dosbox.bc -g -O2 -s USE_SDL=2 -s USE_SDL_NET=2 -s USE_PTHREADS=1 -s TOTAL_MEMORY=256MB -s ERROR_ON_UNDEFINED_SYMBOLS=0
+            EMCC_LOCAL_PORTS="sdl2=$(pwd)/reliquary/emscripten-sdl2" emcc dosbox.bc -g -O2 -s USE_SDL=2 -s USE_PTHREADS=1 -s TOTAL_MEMORY=256MB -s ERROR_ON_UNDEFINED_SYMBOLS=0

@@ -17,8 +17,8 @@ AS_IF([test "x$emscripten" = "xyes"],
 
 dnl Emscripten flags
 if test x$emscripten = xyes; then
-    CXXFLAGS="$CXXFLAGS -s USE_PTHREADS=1 -s USE_SDL_NET=2"
-    LDFLAGS="$LDFLAGS -s USE_SDL=2 -s USE_SDL_NET=2"
+    CXXFLAGS="$CXXFLAGS -s USE_PTHREADS=1"
+    LDFLAGS="$LDFLAGS -s USE_SDL=2"
 fi
 
 dnl Detect the canonical host and target build environment
